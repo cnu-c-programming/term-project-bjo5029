@@ -18,10 +18,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* TODO: Add your own header includes here */
-/* #include "student.h"  */
-/* #include "file_io.h"  */
-/* #include "command.h"  */
+#include "student.h"
+#include "file_io.h"
+#include "command.h"
 
 /* ---------------------------------------------------------------
  * TODO: Implement the interactive shell loop.
@@ -51,39 +50,52 @@ int main(int argc, char *argv[]) {
     const char *csv_path  = "students.csv"; /* default CSV file */
     const char *cmd_file  = NULL;           /* -f <file> argument */
 
-    /* TODO: Parse command-line arguments.
-     *   Supported flags:
-     *     -f <file>   run commands from <file> instead of stdin
-     *   Remaining positional argument (if any): path to students CSV.
-     *
-     *   Example parsing skeleton:
-     *
-     *   for (int i = 1; i < argc; i++) {
-     *       if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) {
-     *           cmd_file = argv[++i];
-     *       } else {
-     *           csv_path = argv[i];
-     *       }
-     *   }
-     */
-    (void)argc;
-    (void)argv;
+    if (argc < 2) {
+#ifdef ADMIN_MODE
+        printf("Usage: ./admin_shell <csv_file> [-f command_file]\n");
+#else
+        printf("Usage: ./client_shell <csv_file> [-f command_file]\n");
+#endif
+        return 1;
+    }
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-f") == 0 && i + 1 < argc) {
+            cmd_file = argv[++i];
+        } else {
+            csv_path = argv[i];
+        }
+    }
+
+    Student *head = NULL;
 
 #ifdef ADMIN_MODE
-    /* Admin shell: supports add, delete, update, save, load, sort, list, find, help, exit */
+    printf("[Admin Program]\n");
+    int loaded = load_csv(csv_path, &head);
+    if (loaded >= 0)
+        printf("Loaded %d students from %s.\n", loaded, csv_path);
+
     if (cmd_file) {
         run_command_file(cmd_file, csv_path);
     } else {
         run_shell(csv_path);
     }
 
+    free_list(&head);
+
 #elif defined(CLIENT_MODE)
-    /* Client shell: supports find, list, help, exit  (read-only) */
+    printf("[Client Program]\n");
+    int loaded = load_csv(csv_path, &head);
+    if (loaded >= 0)
+        printf("Loaded %d students from %s.\n", loaded, csv_path);
+
     if (cmd_file) {
         run_command_file(cmd_file, csv_path);
     } else {
         run_shell(csv_path);
     }
+
+    free_list(&head);
 
 #else
 #error "Define either -DADMIN_MODE or -DCLIENT_MODE when compiling."
