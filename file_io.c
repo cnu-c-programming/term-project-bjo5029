@@ -16,6 +16,7 @@ int load_csv(const char *filename, Student **head) {
         fclose(fp);
         return 0;
     }
+    line[strcspn(line, "\n")] = '\0';
 
     if (strcmp(line, "id,name,score") != 0) {
         printf("Error: invalid CSV header.\n");
@@ -25,6 +26,7 @@ int load_csv(const char *filename, Student **head) {
 
     int count = 0;
     while (fgets(line, sizeof(line), fp) != NULL) {
+        line[strcspn(line, "\n")] = '\0';
         if (line[0] == '\0')
             continue;
 
