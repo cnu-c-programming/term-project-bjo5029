@@ -25,6 +25,6 @@ typedef struct {
     const char *description;
 } Command;
 
-ShellResult dispatch_command(const char *input, Student **head);
+ShellResult dispatch_command(const char *input, Student **head, const char *csv_path);
 
 #endif

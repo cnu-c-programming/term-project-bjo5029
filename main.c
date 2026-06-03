@@ -29,20 +29,31 @@
  *   - Dispatch to the appropriate handler function.
  *   - Loop until the user types "exit" or EOF.
  * --------------------------------------------------------------- */
-void run_shell(const char *csv_path) {
-    /* TODO */
-    (void)csv_path;
+void run_shell(Student **head, const char *csv_path) {
+    char line[256];
+
+    while (1) {
+#ifdef ADMIN_MODE
+        printf("admin> ");
+#else
+        printf("client> ");
+#endif
+        if (fgets(line, sizeof(line), stdin) == NULL)
+            break;
+        line[strcspn(line, "\n")] = '\0';
+        if (line[0] == '\0')
+            continue;
+
+        ShellResult result = dispatch_command(line, head, csv_path);
+        if (result == SHELL_EXIT)
+            break;
+    }
 }
 
-/* ---------------------------------------------------------------
- * TODO: Implement batch mode – read commands from a file.
- *   - Open cmd_file for reading.
- *   - Execute each line as a command (same logic as run_shell).
- *   - Close the file when done.
- * --------------------------------------------------------------- */
-void run_command_file(const char *cmd_file, const char *csv_path) {
+void run_command_file(const char *cmd_file, Student **head, const char *csv_path) {
     /* TODO */
     (void)cmd_file;
+    (void)head;
     (void)csv_path;
 }
 
@@ -76,9 +87,9 @@ int main(int argc, char *argv[]) {
         printf("Loaded %d students from %s.\n", loaded, csv_path);
 
     if (cmd_file) {
-        run_command_file(cmd_file, csv_path);
+        run_command_file(cmd_file, &head, csv_path);
     } else {
-        run_shell(csv_path);
+        run_shell(&head, csv_path);
     }
 
     free_list(&head);
@@ -90,9 +101,9 @@ int main(int argc, char *argv[]) {
         printf("Loaded %d students from %s.\n", loaded, csv_path);
 
     if (cmd_file) {
-        run_command_file(cmd_file, csv_path);
+        run_command_file(cmd_file, &head, csv_path);
     } else {
-        run_shell(csv_path);
+        run_shell(&head, csv_path);
     }
 
     free_list(&head);
