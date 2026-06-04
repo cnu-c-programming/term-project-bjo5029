@@ -26,6 +26,9 @@ typedef struct {
 } Command;
 
 ShellResult handle_list(char *args, Student **head);
+ShellResult handle_find(char *args, Student **head);
+ShellResult handle_add(char *args, Student **head);
+ShellResult handle_delete(char *args, Student **head);
 
 ShellResult dispatch_command(const char *input, Student **head, const char *csv_path);
 
