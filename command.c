@@ -93,6 +93,54 @@ ShellResult handle_delete(char *args, Student **head) {
     return SHELL_OK;
 }
 
+ShellResult handle_stats(char *args, Student **head) {
+    (void)args;
+    if (*head == NULL) {
+        printf("No student data available.\n");
+        return SHELL_OK;
+    }
+    int count = 0, sum = 0, max = -1, min = 101;
+    Student *cur = *head;
+    while (cur != NULL) {
+        sum += cur->score;
+        if (cur->score > max) max = cur->score;
+        if (cur->score < min) min = cur->score;
+        count++;
+        cur = cur->next;
+    }
+    printf("Count: %d\n", count);
+    printf("Average: %.1f\n", (double)sum / count);
+    printf("Max: %d\n", max);
+    printf("Min: %d\n", min);
+    return SHELL_OK;
+}
+
+ShellResult handle_help(char *args, Student **head) {
+    (void)args;
+    (void)head;
+    printf("Commands:\n");
+#ifdef ADMIN_MODE
+    printf("  save                     Save students to CSV\n");
+    printf("  reload                   Reload students from CSV\n");
+    printf("  add <id> <name> <score>  Add a student\n");
+    printf("  delete <id>              Delete a student\n");
+    printf("  update <id> <score>      Update student score\n");
+#endif
+    printf("  find <id>                Find student by ID\n");
+    printf("  list                     List all students\n");
+    printf("  stats                    Show statistics\n");
+    printf("  clear                    Clear screen\n");
+    printf("  exit                     Exit program\n");
+    return SHELL_OK;
+}
+
+ShellResult handle_clear(char *args, Student **head) {
+    (void)args;
+    (void)head;
+    printf("\033[2J\033[H");
+    return SHELL_OK;
+}
+
 ShellResult handle_update(char *args, Student **head) {
     if (args == NULL) {
         printf("Error: missing argument.\n");
@@ -149,6 +197,9 @@ Command commands[] = {
     {"update", handle_update, "update <id> <score>",     "Update student score"},
     {"reload", handle_reload, "reload",                  "Reload from CSV"},
     {"save",   handle_save,   "save",                    "Save to CSV"},
+    {"stats",  handle_stats,  "stats",                   "Show statistics"},
+    {"help",   handle_help,   "help",                    "Show help"},
+    {"clear",  handle_clear,  "clear",                   "Clear screen"},
 };
 #endif
 
@@ -157,6 +208,9 @@ Command commands[] = {
     {"list",   handle_list,   "list",      "List all students"},
     {"find",   handle_find,   "find <id>", "Find student by ID"},
     {"reload", handle_reload, "reload",    "Reload from CSV"},
+    {"stats",  handle_stats,  "stats",     "Show statistics"},
+    {"help",   handle_help,   "help",      "Show help"},
+    {"clear",  handle_clear,  "clear",     "Clear screen"},
 };
 #endif
 
