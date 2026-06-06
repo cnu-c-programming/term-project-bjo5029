@@ -79,6 +79,7 @@ int main(int argc, char *argv[]) {
     }
 
     Student *head = NULL;
+    set_csv_path(csv_path);
 
 #ifdef ADMIN_MODE
     printf("[Admin Program]\n");

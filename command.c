@@ -4,6 +4,12 @@
 #include "command.h"
 #include "file_io.h"
 
+static const char *g_csv_path = NULL;
+
+void set_csv_path(const char *path) {
+    g_csv_path = path;
+}
+
 ShellResult handle_list(char *args, Student **head) {
     (void)args;
     if (*head == NULL) {
@@ -87,19 +93,61 @@ ShellResult handle_delete(char *args, Student **head) {
     return SHELL_OK;
 }
 
+ShellResult handle_update(char *args, Student **head) {
+    if (args == NULL) {
+        printf("Error: missing argument.\n");
+        return SHELL_ERR_MISSING_ARGUMENT;
+    }
+    char *id_str    = strtok(args, " ");
+    char *score_str = strtok(NULL, " ");
+
+    if (id_str == NULL || score_str == NULL) {
+        printf("Error: missing argument.\n");
+        return SHELL_ERR_MISSING_ARGUMENT;
+    }
+
+    int id    = atoi(id_str);
+    int score = atoi(score_str);
+
+    if (score < 0 || score > 100) {
+        printf("Error: invalid score.\n");
+        return SHELL_ERR_INVALID_SCORE;
+    }
+    Student *s = find_student(*head, id);
+    if (s == NULL) {
+        printf("Error: student not found.\n");
+        return SHELL_ERR_STUDENT_NOT_FOUND;
+    }
+    s->score = score;
+    printf("Student updated.\n");
+    return SHELL_OK;
+}
+
+ShellResult handle_reload(char *args, Student **head) {
+    (void)args;
+    free_list(head);
+    int count = load_csv(g_csv_path, head);
+    if (count >= 0)
+        printf("Reloaded %d students from %s.\n", count, g_csv_path);
+    return SHELL_OK;
+}
+
 #ifdef ADMIN_MODE
 Command commands[] = {
     {"list",   handle_list,   "list",                    "List all students"},
     {"find",   handle_find,   "find <id>",               "Find student by ID"},
     {"add",    handle_add,    "add <id> <name> <score>", "Add a student"},
     {"delete", handle_delete, "delete <id>",             "Delete a student"},
+    {"update", handle_update, "update <id> <score>",     "Update student score"},
+    {"reload", handle_reload, "reload",                  "Reload from CSV"},
 };
 #endif
 
 #ifdef CLIENT_MODE
 Command commands[] = {
-    {"list", handle_list, "list",      "List all students"},
-    {"find", handle_find, "find <id>", "Find student by ID"},
+    {"list",   handle_list,   "list",      "List all students"},
+    {"find",   handle_find,   "find <id>", "Find student by ID"},
+    {"reload", handle_reload, "reload",    "Reload from CSV"},
 };
 #endif
 
