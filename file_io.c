@@ -49,8 +49,22 @@ int load_csv(const char *filename, Student **head) {
 }
 
 int save_csv(const char *filename, Student *head) {
-    /* TODO */
-    (void)filename;
-    (void)head;
-    return 0;
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL) {
+        printf("Error: cannot open file %s.\n", filename);
+        return -1;
+    }
+
+    fprintf(fp, "id,name,score\n");
+
+    int count = 0;
+    Student *cur = head;
+    while (cur != NULL) {
+        fprintf(fp, "%d,%s,%d\n", cur->id, cur->name, cur->score);
+        count++;
+        cur = cur->next;
+    }
+
+    fclose(fp);
+    return count;
 }

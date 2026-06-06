@@ -123,6 +123,14 @@ ShellResult handle_update(char *args, Student **head) {
     return SHELL_OK;
 }
 
+ShellResult handle_save(char *args, Student **head) {
+    (void)args;
+    int count = save_csv(g_csv_path, *head);
+    if (count >= 0)
+        printf("Saved %d students to %s.\n", count, g_csv_path);
+    return SHELL_OK;
+}
+
 ShellResult handle_reload(char *args, Student **head) {
     (void)args;
     free_list(head);
@@ -140,6 +148,7 @@ Command commands[] = {
     {"delete", handle_delete, "delete <id>",             "Delete a student"},
     {"update", handle_update, "update <id> <score>",     "Update student score"},
     {"reload", handle_reload, "reload",                  "Reload from CSV"},
+    {"save",   handle_save,   "save",                    "Save to CSV"},
 };
 #endif
 
