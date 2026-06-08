@@ -51,10 +51,33 @@ void run_shell(Student **head, const char *csv_path) {
 }
 
 void run_command_file(const char *cmd_file, Student **head, const char *csv_path) {
-    /* TODO */
-    (void)cmd_file;
-    (void)head;
-    (void)csv_path;
+    FILE *fp = fopen(cmd_file, "r");
+    if (fp == NULL) {
+        printf("Error: cannot open command file %s.\n", cmd_file);
+        run_shell(head, csv_path);
+        return;
+    }
+
+    char line[256];
+    int line_num = 0;
+
+    while (fgets(line, sizeof(line), fp) != NULL) {
+        line[strcspn(line, "\n")] = '\0';
+        line_num++;
+
+        if (line[0] == '\0' || line[0] == '#')
+            continue;
+
+        printf("[command file:%d] %s\n", line_num, line);
+        ShellResult result = dispatch_command(line, head, csv_path);
+
+        if (result == SHELL_EXIT)
+            break;
+        if (result != SHELL_OK)
+            printf("Skipped line %d.\n", line_num);
+    }
+
+    fclose(fp);
 }
 
 int main(int argc, char *argv[]) {
