@@ -143,6 +143,7 @@ ShellResult handle_help(char *args, Student **head) {
     printf("  add <id> <name> <score>  Add a student\n");
     printf("  delete <id>              Delete a student\n");
     printf("  update <id> <score>      Update student score\n");
+    printf("  sort <name|score>        Sort students\n");
 #endif
     printf("  reload                   Reload students from CSV\n");
     printf("  find <id>                Find student by ID\n");
