@@ -10,6 +10,15 @@ void set_csv_path(const char *path) {
     g_csv_path = path;
 }
 
+static int parse_int(const char *str, int *out) {
+    char *end;
+    long val = strtol(str, &end, 10);
+    if (*end != '\0')
+        return -1;
+    *out = (int)val;
+    return 0;
+}
+
 ShellResult handle_list(char *args, Student **head) {
     (void)args;
     if (*head == NULL) {
@@ -30,7 +39,11 @@ ShellResult handle_find(char *args, Student **head) {
         printf("Error: missing argument.\n");
         return SHELL_ERR_MISSING_ARGUMENT;
     }
-    int id = atoi(args);
+    int id;
+    if (parse_int(args, &id) < 0 || id <= 0) {
+        printf("Error: invalid id.\n");
+        return SHELL_ERR_INVALID_ARGUMENT;
+    }
     Student *s = find_student(*head, id);
     if (s == NULL) {
         printf("Error: student not found.\n");
@@ -54,12 +67,14 @@ ShellResult handle_add(char *args, Student **head) {
         return SHELL_ERR_MISSING_ARGUMENT;
     }
 
-    int id    = atoi(id_str);
-    int score = atoi(score_str);
-
-    if (id <= 0) {
+    int id, score;
+    if (parse_int(id_str, &id) < 0 || id <= 0) {
         printf("Error: invalid id.\n");
         return SHELL_ERR_INVALID_ARGUMENT;
+    }
+    if (parse_int(score_str, &score) < 0) {
+        printf("Error: invalid score.\n");
+        return SHELL_ERR_INVALID_SCORE;
     }
     if (name[0] == '\0') {
         printf("Error: invalid name.\n");
@@ -84,7 +99,11 @@ ShellResult handle_delete(char *args, Student **head) {
         printf("Error: missing argument.\n");
         return SHELL_ERR_MISSING_ARGUMENT;
     }
-    int id = atoi(args);
+    int id;
+    if (parse_int(args, &id) < 0 || id <= 0) {
+        printf("Error: invalid id.\n");
+        return SHELL_ERR_INVALID_ARGUMENT;
+    }
     if (delete_student(head, id) < 0) {
         printf("Error: student not found.\n");
         return SHELL_ERR_STUDENT_NOT_FOUND;
@@ -154,9 +173,15 @@ ShellResult handle_update(char *args, Student **head) {
         return SHELL_ERR_MISSING_ARGUMENT;
     }
 
-    int id    = atoi(id_str);
-    int score = atoi(score_str);
-
+    int id, score;
+    if (parse_int(id_str, &id) < 0 || id <= 0) {
+        printf("Error: invalid id.\n");
+        return SHELL_ERR_INVALID_ARGUMENT;
+    }
+    if (parse_int(score_str, &score) < 0) {
+        printf("Error: invalid score.\n");
+        return SHELL_ERR_INVALID_SCORE;
+    }
     if (score < 0 || score > 100) {
         printf("Error: invalid score.\n");
         return SHELL_ERR_INVALID_SCORE;
