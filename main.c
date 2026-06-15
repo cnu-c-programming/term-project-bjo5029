@@ -63,10 +63,11 @@ void run_command_file(const char *cmd_file, Student **head, const char *csv_path
 
     while (fgets(line, sizeof(line), fp) != NULL) {
         line[strcspn(line, "\n")] = '\0';
-        line_num++;
 
         if (line[0] == '\0' || line[0] == '#')
             continue;
+
+        line_num++;
 
         printf("[command file:%d] %s\n", line_num, line);
         ShellResult result = dispatch_command(line, head, csv_path);
