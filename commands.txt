@@ -1,0 +1,6 @@
+list
+add 4 David 88
+update 99 70
+find 4
+save
+exit
