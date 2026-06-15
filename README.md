@@ -84,7 +84,10 @@ project/
 ├── Makefile     - 빌드 자동화
 ├── README.md    - 프로젝트 설명과 사용법
 ├── students.csv - 샘플 CSV 파일
-└── commands.txt - 샘플 명령어 파일
+├── commands.txt - 샘플 명령어 파일
+├── report.md    - 프로젝트 보고서 (마크다운 형식)
+└── report.pdf   - 프로젝트 보고서 (pdf 형식)
+
 ```
 
 ## 제출 전 기능 확인
