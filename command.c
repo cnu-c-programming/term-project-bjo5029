@@ -160,6 +160,53 @@ ShellResult handle_clear(char *args, Student **head) {
     return SHELL_OK;
 }
 
+static void swap_students(Student *a, Student *b) {
+    int tmp_id    = a->id;    a->id    = b->id;    b->id    = tmp_id;
+    int tmp_score = a->score; a->score = b->score; b->score = tmp_score;
+    char tmp_name[32];
+    strcpy(tmp_name, a->name);
+    strcpy(a->name,  b->name);
+    strcpy(b->name,  tmp_name);
+}
+
+ShellResult handle_sort(char *args, Student **head) {
+    if (args == NULL) {
+        printf("Error: missing argument.\n");
+        return SHELL_ERR_MISSING_ARGUMENT;
+    }
+
+    int by_name;
+    if (strcmp(args, "name") == 0)
+        by_name = 1;
+    else if (strcmp(args, "score") == 0)
+        by_name = 0;
+    else {
+        printf("Error: invalid sort key.\n");
+        return SHELL_ERR_INVALID_ARGUMENT;
+    }
+
+    int swapped;
+    do {
+        swapped = 0;
+        Student *cur = *head;
+        while (cur != NULL && cur->next != NULL) {
+            int cmp = by_name ? strcmp(cur->name, cur->next->name)
+                               : cur->score - cur->next->score;
+            if (cmp > 0) {
+                swap_students(cur, cur->next);
+                swapped = 1;
+            }
+            cur = cur->next;
+        }
+    } while (swapped);
+
+    if (by_name)
+        printf("Students sorted by name.\n");
+    else
+        printf("Students sorted by score.\n");
+    return SHELL_OK;
+}
+
 ShellResult handle_update(char *args, Student **head) {
     if (args == NULL) {
         printf("Error: missing argument.\n");
@@ -222,6 +269,7 @@ Command commands[] = {
     {"update", handle_update, "update <id> <score>",     "Update student score"},
     {"reload", handle_reload, "reload",                  "Reload from CSV"},
     {"save",   handle_save,   "save",                    "Save to CSV"},
+    {"sort",   handle_sort,   "sort <name|score>",        "Sort students"},
     {"stats",  handle_stats,  "stats",                   "Show statistics"},
     {"help",   handle_help,   "help",                    "Show help"},
     {"clear",  handle_clear,  "clear",                   "Clear screen"},

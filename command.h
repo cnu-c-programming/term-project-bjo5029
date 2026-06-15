@@ -37,6 +37,7 @@ ShellResult handle_save(char *args, Student **head);
 ShellResult handle_stats(char *args, Student **head);
 ShellResult handle_help(char *args, Student **head);
 ShellResult handle_clear(char *args, Student **head);
+ShellResult handle_sort(char *args, Student **head);
 
 ShellResult dispatch_command(const char *input, Student **head, const char *csv_path);
 
