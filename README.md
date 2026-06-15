@@ -18,12 +18,12 @@ make clean    # 빌드 파일 삭제
 ./client_shell students.csv
 
 # 명령어 파일 사용 (-f 옵션)
-./admin_shell -f commands.txt students.csv
-./client_shell -f commands.txt students.csv
+./admin_shell students.csv -f commands.txt
+./client_shell students.csv -f commands.txt
 ```
 
-- CSV 파일이 없으면 빈 목록으로 시작합니다.
-- `-f` 명령어 파일 처리 후 `exit` 없이 끝나면 인터랙티브 셸을 계속 실행합니다.
+- `-f` 명령어 파일 처리 후 `exit` 없이 끝나면 프로그램이 종료됩니다.
+- `-f` 옵션으로 지정한 명령어 파일을 열 수 없는 경우 오류 메시지를 출력하고 종료합니다.
 
 ## 명령어
 
