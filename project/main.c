@@ -1,17 +1,5 @@
 /*
- * main.c  –  Mini Student Shell
- *
- * TODO: Implement admin_shell and client_shell.
- *
- * Build:
- *   make admin   →  admin_shell  (compiled with -DADMIN_MODE)
- *   make client  →  client_shell (compiled with -DCLIENT_MODE)
- *
- * Usage:
- *   ./admin_shell [students.csv]
- *   ./admin_shell -f commands.txt [students.csv]
- *   ./client_shell [students.csv]
- *   ./client_shell -f commands.txt [students.csv]
+ * main.c  -  Mini Student Shell
  */
 
 #include <stdio.h>
@@ -22,13 +10,6 @@
 #include "file_io.h"
 #include "command.h"
 
-/* ---------------------------------------------------------------
- * TODO: Implement the interactive shell loop.
- *   - Print a prompt and read a line from stdin.
- *   - Parse the line into a command and arguments.
- *   - Dispatch to the appropriate handler function.
- *   - Loop until the user types "exit" or EOF.
- * --------------------------------------------------------------- */
 void run_shell(Student **head, const char *csv_path) {
     char line[256];
 
