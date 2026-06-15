@@ -76,7 +76,7 @@ ShellResult handle_add(char *args, Student **head) {
         printf("Error: invalid score.\n");
         return SHELL_ERR_INVALID_SCORE;
     }
-    if (name[0] == '\0') {
+    if (name[0] == '\0' || strchr(name, ',') != NULL) {
         printf("Error: invalid name.\n");
         return SHELL_ERR_INVALID_ARGUMENT;
     }
