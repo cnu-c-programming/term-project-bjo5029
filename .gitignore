@@ -1,0 +1,5 @@
+admin_shell
+client_shell
+*.o
+*.md
+!README.md
