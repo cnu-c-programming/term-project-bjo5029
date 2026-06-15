@@ -31,7 +31,7 @@ make clean    # 빌드 파일 삭제
 |--------|-------|--------|------|
 | `list` | O | O | 전체 학생 목록 출력 |
 | `find <id>` | O | O | ID로 학생 검색 |
-| `sort <name\|score>` | O | X | 이름 또는 점수로 정렬 |
+| `sort <name\|score>` | O | O | 이름 또는 점수로 정렬 |
 | `help` | O | O | 명령어 도움말 |
 | `exit` | O | O | 프로그램 종료 |
 | `reload` | O | O | CSV에서 다시 불러오기 |
@@ -73,22 +73,27 @@ exit
 ## 파일 구조
 
 ```
-project/
-├── main.c       - 프로그램 시작, 인자 처리, 셸 루프
-├── student.h    - Student 구조체와 linked list 함수 선언
-├── student.c    - linked list 구현
-├── file_io.h    - CSV load/save 함수 선언
-├── file_io.c    - CSV 파일 입출력 구현
-├── command.h    - command 타입, command table, handler 선언
-├── command.c    - 명령어 파싱과 command handler 구현
+student/
+├── main.c       - 프로그램 진입점 (구현 필요)
 ├── Makefile     - 빌드 자동화
-├── README.md    - 프로젝트 설명과 사용법
-├── students.csv - 샘플 CSV 파일
-└── commands.txt - 샘플 명령어 파일
+├── grader.py    - 제출 전 기능 확인용 채점 스크립트
+├── grader.md    - grader 사용법
+└── expected/    - 채점 기준 CSV 파일 모음
 ```
+
+> 자세한 과제 명세는 배포된 `term_project_description.docx` 를 참고하세요.
 
 ## 제출 전 기능 확인
 
 ```bash
+# Linux / macOS
 python3 grader.py ./admin_shell ./client_shell students.csv
+
+# Windows (CMD)
+grader.bat admin_shell.exe client_shell.exe students.csv
+
+# Windows (PowerShell)
+.\grader.ps1 admin_shell.exe client_shell.exe students.csv
 ```
+
+> 최종 채점에 사용하는 test case는 변경될 수 있습니다.
